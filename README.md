@@ -19,7 +19,7 @@
 - [Local Precheck](#local-precheck)
 - [Checklist for Shuttle Submission](#checklist-for-shuttle-submission)
 
-## Overview
+## OvOverview
 Double-Wide OpenFrame is a ChipFoundry project template that provides only a bare padframe (no integrated SoC), giving you a **32 mm² user area** and **63 GPIOs** to design your own custom chip. It is twice as wide as the standard OpenFrame while keeping the same pad interface. You are free to implement your design and directly connect it to the available GPIOs through the pins provided on the `double_wide_openframe_project_wrapper`.
 
 The harness (pad ring + empty wrapper template) lives in a separate repository, [`../dw_openframe`](../dw_openframe). You build your design here, harden it, then it is cell-swapped into the harness to produce the final chip.
