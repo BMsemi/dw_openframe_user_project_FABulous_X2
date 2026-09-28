@@ -36,7 +36,7 @@
     "MACROS": {
         "Neuromorphic_X1_wb": {
             "vh": [
-                "dir::../../ip/Neuromorphic_X1_32x32/hdl/NEUROMORPHIC_X1_stub.v"
+                "dir::../../Stub/NEUROMORPHIC_X1_stub.v"
             ],
             "gds": [
                 "dir::../../gds/Neuromorphic_X1_wb.gds"
