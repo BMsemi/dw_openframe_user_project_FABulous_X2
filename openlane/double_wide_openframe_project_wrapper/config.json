@@ -1,12 +1,8 @@
 {
-    "//": "Double-wide openframe user project wrapper hardening (LibreLane 3).",
-    "//structure": "openframe_user_project-style layout: openlane/<macro>/config.json.",
-    "//footprint": "Same DESIGN_NAME / DIE_AREA / power pins as the padframe's empty",
-    "//footprint2": "wrapper, and the same pad-aligned pin template, so the hardened GDS",
-    "//footprint3": "cell-swaps cleanly into the ../dw_openframe padframe frame.",
 
     "DESIGN_NAME": "double_wide_openframe_project_wrapper",
     "VERILOG_FILES": [
+        "dir::../../verilog/rtl/spi_wb_bridge_sameframe.v",
         "dir::../../verilog/rtl/double_wide_openframe_project_wrapper.v"
     ],
 
@@ -14,47 +10,96 @@
         "version": 3,
         "flow": "Classic",
         "substituting_steps": {
-            "Magic.DRC": null,
-            "Checker.MagicDRC": null,
-            "KLayout.DRC": null,
-            "Checker.KLayoutDRC": null,
             "Checker.YosysUnmappedCells": null
         }
     },
 
-    "CLOCK_PORT": "gpio_in[0]",
-    "CLOCK_PERIOD": 100,
+    "CLOCK_PORT": "gpio_in[14]",
+    "CLOCK_PERIOD": 50,
+    "PNR_SDC_FILE": "dir::signoff.sdc",
+    "SIGNOFF_SDC_FILE": "dir::signoff.sdc",
     "RUN_CTS": true,
 
     "FP_SIZING": "absolute",
     "DIE_AREA": [0, 0, 6754.63, 4766.63],
     "CORE_AREA": [40, 40, 6714.63, 4726.63],
-
-    "//pin-template": "Fixed, pad-aligned pin locations (shipped from the padframe",
-    "//pin-template2": "generator; keep in sync with ../dw_openframe librelane/wrapper/",
-    "//pin-template3": "pin_template.def) so the wrapper's boundary pins match the frame.",
+    "//pin-template": "Foundry-fixed interface artifact; consume verbatim and do not modify.",
     "FP_DEF_TEMPLATE": "dir::pin_template.def",
     "FP_TEMPLATE_MATCH_MODE": "permissive",
 
+    "//pdn-domains": "Keep every official OpenFrame supply port classified as a special net.",
     "VDD_NETS": ["vccd1", "vccd2", "vccd", "vddio", "vdda", "vdda1", "vdda2"],
     "GND_NETS": ["vssd1", "vssd2", "vssd", "vssio", "vssa", "vssa1", "vssa2"],
+    "VERILOG_POWER_DEFINE": "USE_POWER_PINS",
+    "VERILOG_DEFINES": ["USE_POWER_PINS", "USE_PG_PIN"],
 
-    "PDN_MULTILAYER": true,
-    "PDN_VPITCH": 180,
-    "PDN_HPITCH": 180,
-    "ERROR_ON_PDN_VIOLATIONS": false,
+    "MACROS": {
+        "Neuromorphic_X1_wb": {
+            "vh": [
+                "dir::../../ip/Neuromorphic_X1_32x32/hdl/NEUROMORPHIC_X1_stub.v"
+            ],
+            "gds": [
+                "dir::../../gds/Neuromorphic_X1_wb.gds"
+            ],
+            "lef": [
+                "dir::../../lef/Neuromorphic_X1_wb.lef"
+            ],
+            "lib": {
+                "*": [
+                    "dir::../../lib/Neuromorphic_X1_wb.lib"
+                ]
+            },
+            "instances": {
+                "neuro_inst": {
+                    "location": [2800, 500],
+                    "orientation": "S"
+                }
+            }
+        }
+    },
 
-    "//sparse": "Counter example is tiny vs. 32 mm^2 die. Skip tap/fill so harden",
-    "//sparse2": "does not insert hundreds of thousands of tap cells.",
-    "RUN_TAP_ENDCAP_INSERTION": false,
-    "RUN_FILL_INSERTION": false,
+    "FP_PDN_MULTILAYER": true,
+    "FP_PDN_ENABLE_RAILS": true,
+    "FP_PDN_CFG": "dir::pdn_override_1.tcl",
+    "PDN_CONNECT_MACROS_TO_GRID": true,
+    "FP_PDN_VPITCH": 500,
+    "FP_PDN_HPITCH": 500,
+    "FP_PDN_VOFFSET": 5,
+    "FP_PDN_HOFFSET": 5,
+    "FP_PDN_VWIDTH": 3.1,
+    "FP_PDN_HWIDTH": 3.1,
+    "FP_PDN_VSPACING": 15.5,
+    "FP_PDN_HSPACING": 15.5,
+    "FP_PDN_CORE_RING": false,
+    "PDN_MACRO_CONNECTIONS": [
+        "neuro_inst vccd1 vssd1 VDDC1 VSS",
+        "neuro_inst vccd2 vssd1 VDDC2 VSS",
+        "neuro_inst vdda1 vssd1 VDDA1 VSS",
+        "neuro_inst vdda2 vssd1 VDDA2 VSS"
+    ],
+    "ERROR_ON_PDN_VIOLATIONS": true,
 
+    "FP_MACRO_HORIZONTAL_HALO": 80,
+    "FP_MACRO_VERTICAL_HALO": 100,
     "PL_TARGET_DENSITY_PCT": 5,
-    "PDN_CORE_RING": false,
-    "MAGIC_EXT_UNIQUE": "notopports",
-    "PRIMARY_GDSII_STREAMOUT_TOOL": "klayout",
 
-    "LINTER_DISABLE_WARNINGS": [
-        "DECLFILENAME", "EOFNEWLINE", "PINCONNECTEMPTY", "PINMISSING", "UNUSEDSIGNAL"
-    ]
+    "//routing": "Use all routing capacity; the hard-macro Bias_comp2 pin causes four capacity-zero pin-access overflow units that detailed routing must resolve.",
+    "GRT_ADJUSTMENT": 0.0,
+    "GRT_OVERFLOW_ITERS": 300,
+    "GRT_ALLOW_CONGESTION": true,
+
+    "RUN_POST_GPL_DESIGN_REPAIR": true,
+    "RUN_POST_CTS_RESIZER_TIMING": true,
+    "RUN_TAP_ENDCAP_INSERTION": true,
+    "RUN_FILL_INSERTION": true,
+    "RUN_HEURISTIC_DIODE_INSERTION": true,
+    "RUN_ANTENNA_REPAIR": true,
+    "RUN_IRDROP_REPORT": false,
+    "DESIGN_REPAIR_BUFFER_INPUT_PORTS": false,
+
+    "MAGIC_EXT_USE_GDS": true,
+    "//signoff": "Retain full tap/endcap and fill continuity, run both signoff DRC engines, and require LVS to pass.",
+    "MAGIC_EXT_ABSTRACT_CELLS": ["Neuromorphic_X1_wb"],
+    "ERROR_ON_LVS_ERROR": true,
+    "PRIMARY_GDSII_STREAMOUT_TOOL": "klayout"
 }
