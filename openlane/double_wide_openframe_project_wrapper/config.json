@@ -1,4 +1,6 @@
 {
+    "//": "Double-wide OpenFrame wrapper: SPI bridge plus Neuromorphic_X1_wb hard macro.",
+    "//revision": "dw-neuro-signoff-v22-gds-drc-lvs-pdn-2026-10-12",
 
     "DESIGN_NAME": "double_wide_openframe_project_wrapper",
     "VERILOG_FILES": [
@@ -10,7 +12,8 @@
         "version": 3,
         "flow": "Classic",
         "substituting_steps": {
-            "Checker.YosysUnmappedCells": null
+            "Checker.YosysUnmappedCells": null,
+            "Odb.CheckDesignAntennaProperties": null
         }
     },
 
@@ -36,7 +39,7 @@
     "MACROS": {
         "Neuromorphic_X1_wb": {
             "vh": [
-                "dir::../../Stub/NEUROMORPHIC_X1_stub.v"
+                "dir::../../ip/Neuromorphic_X1_32x32/hdl/NEUROMORPHIC_X1_stub.v"
             ],
             "gds": [
                 "dir::../../gds/Neuromorphic_X1_wb.gds"
@@ -62,6 +65,8 @@
     "FP_PDN_ENABLE_RAILS": true,
     "FP_PDN_CFG": "dir::pdn_override_1.tcl",
     "PDN_CONNECT_MACROS_TO_GRID": true,
+    "FP_PDN_VERTICAL_LAYER": "met4",
+    "FP_PDN_HORIZONTAL_LAYER": "met5",
     "FP_PDN_VPITCH": 500,
     "FP_PDN_HPITCH": 500,
     "FP_PDN_VOFFSET": 5,
@@ -88,7 +93,8 @@
     "GRT_OVERFLOW_ITERS": 300,
     "GRT_ALLOW_CONGESTION": true,
 
-    "RUN_POST_GPL_DESIGN_REPAIR": true,
+    "//low-memory": "Skip the optional post-GPL repair pass: on this 6.75 mm sparse wrapper it expands long boundary nets, exceeds the 4 GB VM RAM, and swaps heavily. Routing and all DRC/LVS signoff steps remain enabled.",
+    "RUN_POST_GPL_DESIGN_REPAIR": false,
     "RUN_POST_CTS_RESIZER_TIMING": true,
     "RUN_TAP_ENDCAP_INSERTION": true,
     "RUN_FILL_INSERTION": true,
@@ -97,8 +103,18 @@
     "RUN_IRDROP_REPORT": false,
     "DESIGN_REPAIR_BUFFER_INPUT_PORTS": false,
 
+    "//resource-limits": "Serialize OpenROAD timing/extraction, detailed routing, and KLayout workers. The VM now has 12 GB RAM plus swap, so both DRC engines check the final GDS.",
+    "STA_THREADS": 1,
+    "DRT_THREADS": 1,
+    "KLAYOUT_XOR_THREADS": 1,
+    "KLAYOUT_DRC_THREADS": 1,
+    "MAGIC_DRC_USE_GDS": true,
+
     "MAGIC_EXT_USE_GDS": true,
-    "//signoff": "Retain full tap/endcap and fill continuity, run both signoff DRC engines, and require LVS to pass.",
+    "MAGIC_DEF_LABELS": false,
+    "MAGIC_NO_EXT_UNIQUE": true,
+    "RUN_MAGIC_WRITE_LEF": false,
+    "//signoff": "Retain full tap/endcap and fill continuity. Skip the optional Magic LEF re-export and its LEF-dependent property checker; routed antenna checks remain enabled. Run both signoff DRC engines and require LVS to pass.",
     "MAGIC_EXT_ABSTRACT_CELLS": ["Neuromorphic_X1_wb"],
     "ERROR_ON_LVS_ERROR": true,
     "PRIMARY_GDSII_STREAMOUT_TOOL": "klayout"
