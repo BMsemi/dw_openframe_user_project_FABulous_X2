@@ -1,0 +1,18 @@
+name: validate-reram-submodule
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ip-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Validate ReRAM physical views
+        run: python3 ip/sky130_bmlabs_reram/scripts/check_views.py
+      - name: Confirm pinned dependency manifest
+        run: |
+          test "$(git -C ip/sky130_bmlabs_reram rev-parse HEAD)" = "$(python3 -c 'import json; print(json.load(open("ip/dependencies.json"))["ip"][0]["commit"])')"

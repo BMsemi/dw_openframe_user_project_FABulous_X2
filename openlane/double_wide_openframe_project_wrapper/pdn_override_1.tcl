@@ -1,4 +1,4 @@
-# Double-wide wrapper PDN configuration for Neuromorphic_X1_wb.
+# Double-wide wrapper PDN configuration for sky130_bmlabs_reram__cim32x32.
 #
 # The macro's top power-pin layer is met3. The standard LibreLane macro grid
 # connects met4 to met5, which leaves this macro's five PG pins disconnected.
@@ -137,7 +137,7 @@ define_pdn_grid \
     -starts_with POWER \
     -halo "$::env(FP_PDN_HORIZONTAL_HALO) $::env(FP_PDN_VERTICAL_HALO)"
 
-# Neuromorphic_X1_wb power pins are on met3; connect them to met4.
+# sky130_bmlabs_reram__cim32x32 power pins are on met3; connect them to met4.
 add_pdn_connect \
     -grid macro \
     -layers "met3 met4"

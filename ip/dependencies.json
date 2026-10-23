@@ -1,1 +1,12 @@
-{"IP": [{"Neuromorphic_X1_32x32": "v1.1.0"}]}
+{
+  "ip": [
+    {
+      "name": "sky130_bmlabs_reram",
+      "repository": "https://github.com/BMsemi/sky130_bmlabs_reram",
+      "commit": "b3cd944a1f8f33e3529f17c29d655ba5d2db952d",
+      "cells": [
+        "sky130_bmlabs_reram__cim32x32"
+      ]
+    }
+  ]
+}

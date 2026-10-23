@@ -26,6 +26,31 @@ The harness (pad ring + empty wrapper template) lives in a separate repository, 
 
 ---
 
+## Project-specific ReRAM IP dependency
+
+This project consumes the reusable BM Labs ReRAM library as a pinned Git
+submodule at `ip/sky130_bmlabs_reram`. The integrated hard macro is
+`sky130_bmlabs_reram__cim32x32`, the X2 32 x 32 compute-in-memory cell.
+
+After cloning, initialize the dependency:
+
+```bash
+git submodule update --init --recursive
+python3 ip/sky130_bmlabs_reram/scripts/check_views.py
+```
+
+The GDS, LEF, Liberty and Verilog black box are referenced directly from the
+submodule by the LibreLane configuration. Project-specific placement, PDN and
+routing settings remain in this repository. Non-default routing must be
+configured through supported LibreLane settings; no installed LibreLane or Nix
+store files are patched.
+
+The separate 156-wire FPGA raw compact interface is not declared complete in
+this project until the approved `X2_FPGA_raw_compact.zip` and matching physical
+views are committed to the IP repository.
+
+---
+
 ## Documentation & Resources
 For detailed hardware specifications and design guidelines, refer to the following official documents:
 
