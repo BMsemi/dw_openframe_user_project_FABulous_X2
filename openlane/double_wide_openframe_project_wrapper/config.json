@@ -1,13 +1,11 @@
 {
-    "//": "Double-wide OpenFrame wrapper: SPI bridge plus Neuromorphic_X1_wb hard macro.",
-    "//revision": "dw-neuro-signoff-v22-gds-drc-lvs-pdn-2026-10-12",
-
+    "//": "Double-wide OpenFrame wrapper: SPI bridge plus BM Labs 32x32 ReRAM CIM hard macro.",
+    "//revision": "leo-ip-submodule-v1-2026-10-23",
     "DESIGN_NAME": "double_wide_openframe_project_wrapper",
     "VERILOG_FILES": [
         "dir::../../verilog/rtl/spi_wb_bridge_sameframe.v",
         "dir::../../verilog/rtl/double_wide_openframe_project_wrapper.v"
     ],
-
     "meta": {
         "version": 3,
         "flow": "Classic",
@@ -16,51 +14,78 @@
             "Odb.CheckDesignAntennaProperties": null
         }
     },
-
     "CLOCK_PORT": "gpio_in[14]",
     "CLOCK_PERIOD": 50,
     "PNR_SDC_FILE": "dir::signoff.sdc",
     "SIGNOFF_SDC_FILE": "dir::signoff.sdc",
     "RUN_CTS": true,
-
     "FP_SIZING": "absolute",
-    "DIE_AREA": [0, 0, 6754.63, 4766.63],
-    "CORE_AREA": [40, 40, 6714.63, 4726.63],
+    "DIE_AREA": [
+        0,
+        0,
+        6754.63,
+        4766.63
+    ],
+    "CORE_AREA": [
+        40,
+        40,
+        6714.63,
+        4726.63
+    ],
     "//pin-template": "Foundry-fixed interface artifact; consume verbatim and do not modify.",
     "FP_DEF_TEMPLATE": "dir::pin_template.def",
     "FP_TEMPLATE_MATCH_MODE": "permissive",
-
     "//pdn-domains": "Keep every official OpenFrame supply port classified as a special net.",
-    "VDD_NETS": ["vccd1", "vccd2", "vccd", "vddio", "vdda", "vdda1", "vdda2"],
-    "GND_NETS": ["vssd1", "vssd2", "vssd", "vssio", "vssa", "vssa1", "vssa2"],
+    "VDD_NETS": [
+        "vccd1",
+        "vccd2",
+        "vccd",
+        "vddio",
+        "vdda",
+        "vdda1",
+        "vdda2"
+    ],
+    "GND_NETS": [
+        "vssd1",
+        "vssd2",
+        "vssd",
+        "vssio",
+        "vssa",
+        "vssa1",
+        "vssa2"
+    ],
     "VERILOG_POWER_DEFINE": "USE_POWER_PINS",
-    "VERILOG_DEFINES": ["USE_POWER_PINS", "USE_PG_PIN"],
-
+    "VERILOG_DEFINES": [
+        "USE_POWER_PINS",
+        "USE_PG_PIN"
+    ],
     "MACROS": {
-        "Neuromorphic_X1_wb": {
+        "sky130_bmlabs_reram__cim32x32": {
             "vh": [
-                "dir::../../ip/Neuromorphic_X1_32x32/hdl/NEUROMORPHIC_X1_stub.v"
+                "dir::../../ip/sky130_bmlabs_reram/verilog/sky130_bmlabs_reram__cim32x32.v"
             ],
             "gds": [
-                "dir::../../gds/Neuromorphic_X1_wb.gds"
+                "dir::../../ip/sky130_bmlabs_reram/gds/sky130_bmlabs_reram__cim32x32.gds"
             ],
             "lef": [
-                "dir::../../lef/Neuromorphic_X1_wb.lef"
+                "dir::../../ip/sky130_bmlabs_reram/lef/sky130_bmlabs_reram__cim32x32.lef"
             ],
             "lib": {
                 "*": [
-                    "dir::../../lib/Neuromorphic_X1_wb.lib"
+                    "dir::../../ip/sky130_bmlabs_reram/lib/sky130_bmlabs_reram__cim32x32.lib"
                 ]
             },
             "instances": {
                 "neuro_inst": {
-                    "location": [2800, 500],
+                    "location": [
+                        2800,
+                        500
+                    ],
                     "orientation": "S"
                 }
             }
         }
     },
-
     "FP_PDN_MULTILAYER": true,
     "FP_PDN_ENABLE_RAILS": true,
     "FP_PDN_CFG": "dir::pdn_override_1.tcl",
@@ -83,16 +108,13 @@
         "neuro_inst vdda2 vssd1 VDDA2 VSS"
     ],
     "ERROR_ON_PDN_VIOLATIONS": true,
-
     "FP_MACRO_HORIZONTAL_HALO": 80,
     "FP_MACRO_VERTICAL_HALO": 100,
     "PL_TARGET_DENSITY_PCT": 5,
-
     "//routing": "Use all routing capacity; the hard-macro Bias_comp2 pin causes four capacity-zero pin-access overflow units that detailed routing must resolve.",
-    "GRT_ADJUSTMENT": 0.0,
+    "GRT_ADJUSTMENT": 0,
     "GRT_OVERFLOW_ITERS": 300,
     "GRT_ALLOW_CONGESTION": true,
-
     "//low-memory": "Skip the optional post-GPL repair pass: on this 6.75 mm sparse wrapper it expands long boundary nets, exceeds the 4 GB VM RAM, and swaps heavily. Routing and all DRC/LVS signoff steps remain enabled.",
     "RUN_POST_GPL_DESIGN_REPAIR": false,
     "RUN_POST_CTS_RESIZER_TIMING": true,
@@ -102,20 +124,20 @@
     "RUN_ANTENNA_REPAIR": true,
     "RUN_IRDROP_REPORT": false,
     "DESIGN_REPAIR_BUFFER_INPUT_PORTS": false,
-
     "//resource-limits": "Serialize OpenROAD timing/extraction, detailed routing, and KLayout workers. The VM now has 12 GB RAM plus swap, so both DRC engines check the final GDS.",
     "STA_THREADS": 1,
     "DRT_THREADS": 1,
     "KLAYOUT_XOR_THREADS": 1,
     "KLAYOUT_DRC_THREADS": 1,
     "MAGIC_DRC_USE_GDS": true,
-
     "MAGIC_EXT_USE_GDS": true,
     "MAGIC_DEF_LABELS": false,
     "MAGIC_NO_EXT_UNIQUE": true,
     "RUN_MAGIC_WRITE_LEF": false,
     "//signoff": "Retain full tap/endcap and fill continuity. Skip the optional Magic LEF re-export and its LEF-dependent property checker; routed antenna checks remain enabled. Run both signoff DRC engines and require LVS to pass.",
-    "MAGIC_EXT_ABSTRACT_CELLS": ["Neuromorphic_X1_wb"],
+    "MAGIC_EXT_ABSTRACT_CELLS": [
+        "sky130_bmlabs_reram__cim32x32"
+    ],
     "ERROR_ON_LVS_ERROR": true,
     "PRIMARY_GDSII_STREAMOUT_TOOL": "klayout"
 }

@@ -1,0 +1,3 @@
+[submodule "ip/sky130_bmlabs_reram"]
+	path = ip/sky130_bmlabs_reram
+	url = ../../BMsemi/sky130_bmlabs_reram.git
